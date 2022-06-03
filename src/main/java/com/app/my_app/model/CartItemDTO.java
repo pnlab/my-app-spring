@@ -1,6 +1,10 @@
 package com.app.my_app.model;
 
 import javax.validation.constraints.NotNull;
+
+import com.app.my_app.domain.Product;
+import com.app.my_app.domain.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +18,9 @@ public class CartItemDTO {
     @NotNull
     private Integer quantity;
 
-    private Long user;
 
-    private Long product;
+    private User user;
+
+    private Product product;
 
 }

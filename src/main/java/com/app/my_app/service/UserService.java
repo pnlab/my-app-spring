@@ -4,8 +4,11 @@ import com.app.my_app.domain.User;
 import com.app.my_app.model.UserDTO;
 import com.app.my_app.repos.UserRepository;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     public UserService(final UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -26,10 +31,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO get(final Long id) {
-        return userRepository.findById(id)
-                .map(user -> mapToDTO(user, new UserDTO()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public User get(final Long id) {
+        return userRepository.findById(id).orElse(null);
+//                .map(user -> mapToDTO(user, new UserDTO()))
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public Long create(final UserDTO userDTO) {
@@ -43,6 +48,25 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         mapToEntity(userDTO, user);
         userRepository.save(user);
+    }
+    public User registerUser(UserDTO userDto){
+//        userRepository
+//                .findOneByUsername(userDto.getUsername().toLowerCase())
+//                .ifPresent(existingUser -> {
+//
+//                    return null;
+//                });
+
+        User user = new User();
+        user.setUsername(userDto.getUsername().toLowerCase());
+        user.setEmail(userDto.getEmail().toLowerCase(Locale.ROOT));
+        user.setFirstname(userDto.getFirstname());
+        user.setLastname(userDto.getLastname());
+        String encryptedPassword = passwordEncoder.encode(userDto.getPassword());
+        user.setPassword(encryptedPassword);
+        System.out.println(user);
+        userRepository.save(user);
+        return user ;
     }
 
     public void delete(final Long id) {

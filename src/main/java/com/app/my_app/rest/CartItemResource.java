@@ -1,6 +1,10 @@
 package com.app.my_app.rest;
 
+import com.app.my_app.CustomUserDetails;
+import com.app.my_app.domain.CartItem;
 import com.app.my_app.model.CartItemDTO;
+import com.app.my_app.model.CreateCartItemDTO;
+import com.app.my_app.model.UpdateCartItemDto;
 import com.app.my_app.service.CartItemService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
@@ -8,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +34,9 @@ public class CartItemResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemDTO>> getAllCartItems() {
-        return ResponseEntity.ok(cartItemService.findAll());
+    public ResponseEntity<List<CartItem>> getAllCartItems() {
+        CustomUserDetails u = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(cartItemService.findAllByUserId(u.getUserId()));
     }
 
     @GetMapping("/{id}")
@@ -40,14 +46,14 @@ public class CartItemResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createCartItem(@RequestBody @Valid final CartItemDTO cartItemDTO) {
+    public ResponseEntity<Long> createCartItem(@RequestBody @Valid final CreateCartItemDTO cartItemDTO) {
         return new ResponseEntity<>(cartItemService.create(cartItemDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCartItem(@PathVariable final Long id,
-            @RequestBody @Valid final CartItemDTO cartItemDTO) {
-        cartItemService.update(id, cartItemDTO);
+            @RequestBody @Valid final CreateCartItemDTO createCartItemDTO) {
+        cartItemService.update(id, createCartItemDTO);
         return ResponseEntity.ok().build();
     }
 

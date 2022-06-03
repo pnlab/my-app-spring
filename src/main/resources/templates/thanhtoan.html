@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/bocuc.css">
+    <link rel="stylesheet" href="css/thanhtoan.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<body>
+<div class="than">
+    <div class="tieu-de">
+        <div class="bieu-tuong">
+            <a href="/">
+                <img src="https://cdn-icons-png.flaticon.com/512/4163/4163765.png" alt="thuc pham">
+            </a>
+            <!-- Menu ds các loại mặt hàng -->
+            <div class="danhmuc">
+                <button class="danhmuc-nut" onclick="hienThiDanhMuc()">Danh mục</button>
+                <div class="danhmuc-noidung" id="danhmuc-nd">
+                    <a href="#">Nước uống</a>
+                    <a href="#">Rau củ</a>
+                    <a href="#">Thịt và cá</a>
+                    <a href="#">Trứng và sữa</a>
+                    <a href="#">Bánh</a>
+                    <a href="#">Gia vị</a>
+                </div>
+            </div>
+        </div>
+        <div class="tim-kiem">
+            <form>
+                <div>
+                    <input placeholder="Tìm kiếm sản phẩm bạn muốn tại đây" value=""/>
+                </div>
+            </form>
+        </div>
+        <ul class="dieu-huong">
+            <li>
+                <a class="" href="/donhang.html">Đơn hàng</a>
+            </li>
+            <li>
+                <a class="" href="/lienhe.html">Liên hệ</a>
+            </li>
+            <div class="dieu-huong-phai">
+                <div class="bieu_tuong_gio_hang">
+                    <a href="/giohang.html">
+                        <img class="dieuhuong"
+                             src="https://thumbs.dreamstime.com/b/shopping-cart-icon-trolley-icon-shopping-cart-icon-trolley-icon-vector-illustration-isolated-white-background-163727286.jpg"
+                             alt="">
+                        <div class='giohang-soluong'>5</div>
+                    </a>
+                </div>
+                <div class="nut-dang-nhap">
+                    <a href="/dangnhap.html">
+                        <button>
+                            <img class="dieuhuong"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                                 alt="">
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </ul>
+    </div>
+    <div class="noi-dung">
+        <div class="tt-thanh-toan">
+            <div class="tt-ca-nhan">
+                <div>
+                    <div class="tieu-de">
+                        <div>
+                            <span>1</span>
+                            <p>Số liên hệ</p>
+                        </div>
+                        <button>Cập nhật</button>
+                    </div>
+                    <div>
+                        <div>Điện thoại:</div>
+                        <input class="sdt-input" value="+1 (936) 514-1641">
+                    </div>
+                </div>
+                <div>
+                    <div class="tieu-de">
+                        <div>
+                            <span>2</span>
+                            <p>Địa chỉ gửi</p>
+                        </div>
+                        <button> Thêm</button>
+                    </div>
+                    <div>
+                        <div class="dia-chi">
+                            <div>
+                                <p class="loai-dia-chi">Gửi từ:</p>
+                                <p class="dia-chi-ct">30 Trần Phú, P.Mộ Lao, Hà Đông, Hà Nội</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="tieu-de">
+                        <div>
+                            <span>3</span>
+                            <p>Địa chỉ nhận</p>
+                        </div>
+                        <button> Thêm</button>
+                    </div>
+                    <div>
+                        <div class="dia-chi">
+                            <div id="headlessui-radiogroup-option-13" role="radio" aria-checked="true" tabindex="0">
+                                <div>
+                                    <p class="loai-dia-chi">Nơi nhận:</p>
+                                    <p class="dia-chi-ct">20 Văn Quán, P.Văn Quán, Hà Đông,Hà Nội
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="tieu-de">
+                        <div>
+                            <span>4</span>
+                            <p>Thông tin giao hàng</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="ds-thoi-gian-giao-hang">
+                            <div>
+                                <span>Chuyển phát nhanh</span>
+                                <span>Nhận hàng trong 90 phút</span>
+                            </div>
+                            <div>
+                                <span>Buổi sáng</span>
+                                <span>8.00 giờ - 11.00 giờ</span>
+                            </div>
+                            <div>
+                                <span>Buổi trưa</span>
+                                <span>11.00 giờ - 14.00 giờ</span>
+                            </div>
+                            <div>
+                                <span>Buổi chiều</span>
+                                <span>14.00 giờ - 17.00 giờ</span>
+                            </div>
+                            <div>
+                                <span>Buổi tối</span>
+                                <span>17.00 giờ - 20.00 giờ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tt-don-hang">
+                <div>
+                    <div class="ds-mat-hang">
+                        <div class="mat-hang">
+                            <div>
+                                    <span>
+                                        <span>1</span>
+                                        <span>x</span>
+                                        <span>Trứng gà Happy Egg</span> | <span>1lb</span>
+                                    </span>
+                            </div>
+                            <span>₫30.000</span>
+                        </div>
+
+                    </div>
+                    <div class="thanh-tien">
+                        <div>
+                            <p>Tổng tiền hàng</p>
+                            <span>đ46.870</span>
+                        </div>
+                        <div>
+                            <p>Phí vận chuyển</p>
+                            <span>đ0</span>
+                        </div>
+
+                        <div class="tong-don-hang">
+                            <p>Total</p>
+                            <span>đ46.870</span>
+                        </div>
+                    </div>
+                    <div class="ds-hinh-thuc-thanh-toan">
+                        <div>
+                            <label>Hình thức thanh toán</label>
+                            <div class="hinh-thuc-thanh-toan">
+
+                                <div>
+                                        <span>Thanh toán khi giao
+                                            hàng</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nut-dat-hang"><a href="/donhang">Đặt hàng</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--    <script src="js/script.js"></script>-->
+</body>
+<script src="/js/thanhtoan.js"></script>
+</html>

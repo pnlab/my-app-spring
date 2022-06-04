@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,12 +36,17 @@ public class Category {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_parent_id")
+    @JsonBackReference
     private Category categoryParent;
 
+
     @OneToMany(mappedBy = "categoryParent")
+    @JsonManagedReference
     private Set<Category> categoryParentCategorys;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private Set<Product> categoryProducts;
 
 }

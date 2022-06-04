@@ -35,8 +35,7 @@ public class CartItemResource {
 
     @GetMapping
     public ResponseEntity<List<CartItem>> getAllCartItems() {
-        CustomUserDetails u = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(cartItemService.findAllByUserId(u.getUserId()));
+        return ResponseEntity.ok(cartItemService.findAllByUserId());
     }
 
     @GetMapping("/{id}")
@@ -44,23 +43,36 @@ public class CartItemResource {
         return ResponseEntity.ok(cartItemService.get(id));
     }
 
+    // Them 1 san pham vao gio hang
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createCartItem(@RequestBody @Valid final CreateCartItemDTO cartItemDTO) {
+    public ResponseEntity<CartItem> createCartItem(@RequestBody @Valid final CreateCartItemDTO cartItemDTO) {
         return new ResponseEntity<>(cartItemService.create(cartItemDTO), HttpStatus.CREATED);
     }
 
+    @PostMapping("/add/{id}")
+    public ResponseEntity<List<CartItem>> addProductToCart(@PathVariable final Long productId) {
+        return new ResponseEntity<>(cartItemService.addProduct(productId), HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateCartItem(@PathVariable final Long id,
-            @RequestBody @Valid final CreateCartItemDTO createCartItemDTO) {
-        cartItemService.update(id, createCartItemDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CartItem> updateCartItem(@PathVariable final Long id,
+            @RequestBody @Valid final CreateCartItemDTO createCartItemDTO) {        
+        return ResponseEntity.ok(cartItemService.update(id, createCartItemDTO));
     }
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteCartItem(@PathVariable final Long id) {
         cartItemService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Delete all user cart
+    @DeleteMapping("/all")
+    @ApiResponse(responseCode = "204")
+    public ResponseEntity<Void> deleteAllCartItem() {
+        cartItemService.deleteAll();
         return ResponseEntity.noContent().build();
     }
 

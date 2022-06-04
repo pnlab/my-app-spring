@@ -36,10 +36,8 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductDTO get(final Long id) {
-        return productRepository.findById(id)
-                .map(product -> mapToDTO(product, new ProductDTO()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public Product get(final Long id) {
+        return productRepository.findById(id).orElse(null);
     }
 
     public Long create(final ProductDTO productDTO) {
@@ -67,7 +65,7 @@ public class ProductService {
         productDTO.setPrice(product.getPrice());
         productDTO.setQuantity(product.getQuantity());
         productDTO.setUnit(product.getUnit());
-        productDTO.setOrderItem(product.getOrderItem() == null ? null : product.getOrderItem().getId());
+//        productDTO.setOrderItem(product.getOrderItem() == null ? null : product.getOrderItem().getId());
         productDTO.setCategory(product.getCategory() == null ? null : product.getCategory().getId());
         return productDTO;
     }
@@ -78,17 +76,17 @@ public class ProductService {
         product.setImage(productDTO.getImage());
         product.setPrice(productDTO.getPrice());
         product.setQuantity(productDTO.getQuantity());
-        product.setUnit(productDTO.getUnit());
-        if (productDTO.getOrderItem() != null && (product.getOrderItem() == null || !product.getOrderItem().getId().equals(productDTO.getOrderItem()))) {
-            final OrderItem orderItem = orderItemRepository.findById(productDTO.getOrderItem())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "orderItem not found"));
-            product.setOrderItem(orderItem);
-        }
-        if (productDTO.getCategory() != null && (product.getCategory() == null || !product.getCategory().getId().equals(productDTO.getCategory()))) {
-            final Category category = categoryRepository.findById(productDTO.getCategory())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found"));
-            product.setCategory(category);
-        }
+//        product.setUnit(productDTO.getUnit());
+//        if (productDTO.getOrderItem() != null && (product.getOrderItem() == null || !product.getOrderItem().getId().equals(productDTO.getOrderItem()))) {
+//            final OrderItem orderItem = orderItemRepository.findById(productDTO.getOrderItem())
+//                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "orderItem not found"));
+//            product.setOrderItem(orderItem);
+//        }
+//        if (productDTO.getCategory() != null && (product.getCategory() == null || !product.getCategory().getId().equals(productDTO.getCategory()))) {
+//            final Category category = categoryRepository.findById(productDTO.getCategory())
+//                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found"));
+//            product.setCategory(category);
+//        }
         return product;
     }
 

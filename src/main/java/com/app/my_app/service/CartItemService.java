@@ -9,6 +9,7 @@ import com.app.my_app.model.UpdateCartItemDto;
 import com.app.my_app.repos.CartItemRepository;
 import com.app.my_app.repos.ProductRepository;
 import com.app.my_app.repos.UserRepository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,28 +29,41 @@ public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+
+    @Autowired
+    private AuthService authService;
+
+  
+
+    @Autowired
+    private ProductService productService;
     @Autowired
     private ModelMapper mapper;
 
     public CartItemService(final CartItemRepository cartItemRepository,
-            final UserRepository userRepository, final ProductRepository productRepository) {
+                           final UserRepository userRepository, final ProductRepository productRepository) {
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
     }
 
-    public List<CartItem> findAll() {
-        return cartItemRepository.findAll();
-//                .stream()
-//                .map(cartItem -> mapper.map(cartItem, CartItemDTO.class))
-//                .collect(Collectors.toList());
+    @Transactional
+    public List<CartItem> addProduct(Long productId){
+        Product product = productService.get(productId);
+        CartItem cartItem = new CartItem();
+        cartItem.setProduct(product);
+        cartItem.setQuantity(1);
+        cartItem.setUser(authService.getCurrentUser());
+        cartItemRepository.save(cartItem);
+        return findAllByUserId();
     }
 
-    public List<CartItem> findAllByUserId(Long userId) {
-        return cartItemRepository.findAllByUserId(userId);
-//                .stream()
-//                .map(cartItem -> mapper.map(cartItem, CartItemDTO.class))
-//                .collect(Collectors.toList());
+    public List<CartItem> findAll() {
+        return cartItemRepository.findAllByUserId(authService.getCurrentUserId());
+    }
+
+    public List<CartItem> findAllByUserId() {        
+        return cartItemRepository.findAllByUserId(authService.getCurrentUserId());
     }
 
     public CartItemDTO get(final Long id) {
@@ -58,18 +72,36 @@ public class CartItemService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public Long create(final CreateCartItemDTO cartItemDTO) {
-        CartItem cartItem = new CartItem();
-        mapToEntity(cartItemDTO, cartItem);
-//        cartItem = mapper.map(cartItemDTO, CartItem.class);
-        return cartItemRepository.save(cartItem).getId();
+    // Them san pham vao gio hang
+    @Transactional
+    public CartItem create(final CreateCartItemDTO cartItemDTO) {
+        // Kiem tra san pham co trong gio hang hay chua
+        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndUserId(cartItemDTO.getProductId(), authService.getCurrentUserId());
+        if(cartItem!=null){
+            // Neu ton tai thi cong so luong len 1
+            cartItem.setQuantity(cartItem.getQuantity()+1);
+        }else{
+            cartItem = new CartItem();
+            cartItem.setQuantity(cartItemDTO.getQuantity());
+            cartItem.setProduct(productService.get(cartItemDTO.getProductId()));
+            cartItem.setUser(authService.getCurrentUser());
+        }                   
+        return cartItemRepository.save(cartItem);
     }
 
-    public void update(final Long id, final CreateCartItemDTO createCartItemDTO) {
-        final CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        mapToEntity(createCartItemDTO, cartItem);
-        cartItemRepository.save(cartItem);
+
+    // Xóa giỏ hàng
+    public void deleteAll(){
+        cartItemRepository.deleteAllByUserId(authService.getCurrentUserId());
+    }
+
+    // Cập nhật giỏ hàng
+    public CartItem update(Long id, final CreateCartItemDTO cartItemDTO) {
+        CartItem cartItem = cartItemRepository.findById(id).orElse(null);
+        cartItem.setProduct(productService.get(cartItemDTO.getProductId()));
+        cartItem.setQuantity(cartItemDTO.getQuantity());
+
+        return cartItemRepository.save(cartItem);
     }
 
     public void delete(final Long id) {
@@ -86,19 +118,6 @@ public class CartItemService {
         return cartItemDTO;
     }
 
-    private CartItem mapToEntity(final CreateCartItemDTO cartItemDTO, final CartItem cartItem) {
-        cartItem.setQuantity(cartItemDTO.getQuantity());
-        if (cartItemDTO.getUserId() != null) {
-            final User user = userRepository.findById(cartItemDTO.getUserId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
-            cartItem.setUser(user);
-        }
-        if (cartItemDTO.getProductId() != null) {
-            final Product product = productRepository.findById(cartItemDTO.getProductId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found"));
-            cartItem.setProduct(product);
-        }
-        return cartItem;
-    }
+
 
 }

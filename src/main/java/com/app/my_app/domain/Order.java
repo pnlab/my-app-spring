@@ -11,6 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,15 +36,22 @@ public class Order {
     @Column
     private String address;
 
+    @Column
+    private String phone;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
+    @JsonBackReference
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order")
-    private Set<OrderItem> orderOrderItems;
+    @JsonManagedReference
+    @JsonIgnoreProperties("order")
+    private Set<OrderItem> orderItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
+    @JsonBackReference
     private User users;
 
 }

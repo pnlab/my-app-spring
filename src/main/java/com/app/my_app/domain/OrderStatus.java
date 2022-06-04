@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +30,8 @@ public class OrderStatus {
     @Column(name = "\"description\"")
     private String description;
 
+    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "status")
     private Set<Order> statusOrders;
 

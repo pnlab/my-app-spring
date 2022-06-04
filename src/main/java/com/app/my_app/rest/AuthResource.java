@@ -2,6 +2,7 @@ package com.app.my_app.rest;
 
 import com.app.my_app.domain.User;
 import com.app.my_app.model.UserDTO;
+import com.app.my_app.service.AuthService;
 import com.app.my_app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ public class AuthResource {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody UserDTO userDto) {
@@ -26,6 +30,13 @@ public class AuthResource {
         User user = userService.registerUser(userDto);
         System.out.println(userDto);
     }
+
+    @GetMapping("/me")
+    public User me(){
+        return userService.get(authService.getCurrentUserId());
+    }
+
+
 
     private static boolean isPasswordLengthInvalid(String password) {
         return password.length() < 4;

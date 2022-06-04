@@ -1,5 +1,6 @@
 package com.app.my_app.domain;
 
+import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;

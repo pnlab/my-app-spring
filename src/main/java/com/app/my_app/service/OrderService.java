@@ -1,17 +1,25 @@
 package com.app.my_app.service;
 
-import com.app.my_app.domain.Order;
-import com.app.my_app.domain.OrderStatus;
-import com.app.my_app.domain.User;
+import com.app.my_app.domain.*;
 import com.app.my_app.model.OrderDTO;
+import com.app.my_app.repos.OrderItemRepository;
 import com.app.my_app.repos.OrderRepository;
 import com.app.my_app.repos.OrderStatusRepository;
 import com.app.my_app.repos.UserRepository;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.aspectj.weaver.ast.Or;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.transaction.Transactional;
 
 
 @Service
@@ -21,31 +29,68 @@ public class OrderService {
     private final OrderStatusRepository orderStatusRepository;
     private final UserRepository userRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CartItemService cartItemService;
+
     public OrderService(final OrderRepository orderRepository,
-            final OrderStatusRepository orderStatusRepository,
-            final UserRepository userRepository) {
+                        final OrderStatusRepository orderStatusRepository,
+                        final UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.userRepository = userRepository;
     }
 
-    public List<OrderDTO> findAll() {
-        return orderRepository.findAll()
-                .stream()
-                .map(order -> mapToDTO(order, new OrderDTO()))
-                .collect(Collectors.toList());
+    // Lấy tất cả danh sách order
+    public List<Order> findAll() {
+        return orderRepository.findAllByUsersId(authService.getCurrentUserId());
     }
 
-    public OrderDTO get(final Long id) {
-        return orderRepository.findById(id)
-                .map(order -> mapToDTO(order, new OrderDTO()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public Order get(final Long id) {
+        return orderRepository.findById(id).orElse(null);
     }
 
     public Long create(final OrderDTO orderDTO) {
         final Order order = new Order();
         mapToEntity(orderDTO, order);
         return orderRepository.save(order).getId();
+    }
+
+    @Transactional
+    public Order makeOrder() {
+        Order order = new Order();
+        order.setAddress(authService.getCurrentUser().getAddress());
+        order.setTotal(10000L);
+        order.setUsers(authService.getCurrentUser());
+        Order updateOrder = orderRepository.save(order);
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        // Get cart item;
+        List<CartItem> cartItems = cartItemService.findAll();
+
+        for (CartItem c : cartItems) {
+            OrderItem o = new OrderItem();
+            o.setName(c.getProduct().getName());
+            o.setPrice(c.getProduct().getPrice());
+            o.setQuantity(c.getQuantity());
+            o.setOrder(updateOrder);
+            o.setProduct(c.getProduct());
+            OrderItem orderItemSave = orderItemRepository.save(o);
+            orderItems.add(orderItemSave);
+
+        }
+        Set<OrderItem> os = new HashSet<>(orderItems);
+        updateOrder.setOrderItems(os);
+
+        return orderRepository.save(updateOrder);
     }
 
     public void update(final Long id, final OrderDTO orderDTO) {
@@ -81,6 +126,8 @@ public class OrderService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "users not found"));
             order.setUsers(users);
         }
+
+
         return order;
     }
 

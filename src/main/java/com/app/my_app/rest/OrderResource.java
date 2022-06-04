@@ -1,5 +1,6 @@
 package com.app.my_app.rest;
 
+import com.app.my_app.domain.Order;
 import com.app.my_app.model.OrderDTO;
 import com.app.my_app.service.OrderService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,12 +30,12 @@ public class OrderResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+    public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> getOrder(@PathVariable final Long id) {
+    public ResponseEntity<Order> getOrder(@PathVariable final Long id) {
         return ResponseEntity.ok(orderService.get(id));
     }
 
@@ -42,6 +43,12 @@ public class OrderResource {
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createOrder(@RequestBody @Valid final OrderDTO orderDTO) {
         return new ResponseEntity<>(orderService.create(orderDTO), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/create")
+    public Order createOrder() {
+        return orderService.makeOrder();
     }
 
     @PutMapping("/{id}")

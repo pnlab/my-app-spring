@@ -1,5 +1,6 @@
 package com.app.my_app.rest;
 
+import com.app.my_app.domain.Product;
 import com.app.my_app.model.ProductDTO;
 import com.app.my_app.service.ProductService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +35,7 @@ public class ProductResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable final Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable final Long id) {
         return ResponseEntity.ok(productService.get(id));
     }
 

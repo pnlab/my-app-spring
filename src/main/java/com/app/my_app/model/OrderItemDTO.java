@@ -9,9 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderItemDTO {
-
     private Long id;
-
     @NotNull
     private Integer quantity;
 
@@ -20,7 +18,7 @@ public class OrderItemDTO {
     private String name;
 
     @Size(max = 255)
-    private String price;
+    private Long price;
 
     @NotNull
     private Long order;

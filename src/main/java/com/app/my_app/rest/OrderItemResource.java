@@ -28,6 +28,7 @@ public class OrderItemResource {
         this.orderItemService = orderItemService;
     }
 
+    // Lấy danh sách order
     @GetMapping
     public ResponseEntity<List<OrderItemDTO>> getAllOrderItems() {
         return ResponseEntity.ok(orderItemService.findAll());

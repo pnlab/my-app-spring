@@ -3,9 +3,11 @@ package com.app.my_app.service;
 import com.app.my_app.domain.User;
 import com.app.my_app.model.UserDTO;
 import com.app.my_app.repos.UserRepository;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,8 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final UserRepository userRepository;
 
 
     public UserService(final UserRepository userRepository) {
@@ -25,10 +27,7 @@ public class UserService {
     }
 
     public List<UserDTO> findAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(user -> mapToDTO(user, new UserDTO()))
-                .collect(Collectors.toList());
+        return userRepository.findAll().stream().map(user -> mapToDTO(user, new UserDTO())).collect(Collectors.toList());
     }
 
     public User get(final Long id) {
@@ -44,12 +43,12 @@ public class UserService {
     }
 
     public void update(final Long id, final UserDTO userDTO) {
-        final User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        final User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         mapToEntity(userDTO, user);
         userRepository.save(user);
     }
-    public User registerUser(UserDTO userDto){
+
+    public User registerUser(UserDTO userDto) {
 //        userRepository
 //                .findOneByUsername(userDto.getUsername().toLowerCase())
 //                .ifPresent(existingUser -> {
@@ -66,7 +65,7 @@ public class UserService {
         user.setPassword(encryptedPassword);
         System.out.println(user);
         userRepository.save(user);
-        return user ;
+        return user;
     }
 
     public void delete(final Long id) {

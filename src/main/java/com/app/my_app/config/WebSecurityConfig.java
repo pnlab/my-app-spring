@@ -24,19 +24,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomUserDetailsService customUserDetailsService;
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
+
+
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/auth/**", "/store/**", "/home", "/js/**", "/css/**", "/img/**", "/demo/**").permitAll() // Cho phép tất cả mọi người truy cập vào 2 địa chỉ này
-                .anyRequest().authenticated() // Tất cả các request khác đều cần phải xác thực mới được truy cập
+                .antMatchers("/v2/**").permitAll()
+                .antMatchers("/swagger-ui.html")
+                .permitAll()
+                .antMatchers("/webjars/**")
+                .permitAll()
+                .antMatchers("/swagger-resources/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated() // Tất cả các request khác đều cần phải xác thực mới được truy cập
                 .and()
                 .formLogin()
-//                .loginPage("/dangnhap")// Cho phép người dùng xác thực bằng form login
-                .defaultSuccessUrl("/")
-                .successForwardUrl("/")
+
+                .loginPage("/dangnhap")
+                .loginProcessingUrl("/login")// Cho phép người dùng xác thực bằng form login
+                .defaultSuccessUrl("/",true)
+
                 .permitAll() // Tất cả đều được truy cập vào địa chỉ này
-                .and()
-                .logout() // Cho phép logout
+                .and().logout() // Cho phép logout
                 .permitAll();
 
 

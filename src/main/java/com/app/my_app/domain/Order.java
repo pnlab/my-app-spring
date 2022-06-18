@@ -1,5 +1,7 @@
 package com.app.my_app.domain;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 
 @Entity
@@ -53,5 +58,17 @@ public class Order {
     @JoinColumn(name = "users_id")
     @JsonBackReference
     private User users;
+
+//    @CreatedDate
+////    @Column(name = "created_at", nullable = false, updatable = false)
+//    @Column(name = "created_at")
+//    private Date createdAt;
+
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
 
 }

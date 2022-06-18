@@ -2,6 +2,7 @@ package com.app.my_app;
 
 import com.app.my_app.domain.User;
 import com.app.my_app.model.ProductDTO;
+import com.app.my_app.service.AuthService;
 import com.app.my_app.service.ProductService;
 import com.app.my_app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,24 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
+
     @GetMapping("/")
     public String index(Model model) {
 
         List<ProductDTO> products = productService.findAll();
 
-        CustomUserDetails u = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.get(1L);
+//        CustomUserDetails u = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        User user = userService.get(1L);
 
         model.addAttribute("products", products);
 
         model.addAttribute("username", "Ngueyn");
 
-        model.addAttribute("cardCount", user.getUserCartItems().size());
+        model.addAttribute("cardCount", 0);
+
+        System.out.println(authService.getCurrentUser());
 
 
         return "index";

@@ -20,6 +20,5 @@ public class AuthService {
 
     public User getCurrentUser() {
         return userRepository.findById(getCurrentUserId()).orElse(null);
-
     }
 }

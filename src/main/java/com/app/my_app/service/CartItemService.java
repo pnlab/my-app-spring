@@ -90,7 +90,7 @@ public class CartItemService {
     }
 
 
-    // Xóa giỏ hàng
+    // Xóa giỏ hàng của 1 user
     public void deleteAll(){
         cartItemRepository.deleteAllByUserId(authService.getCurrentUserId());
     }
@@ -98,7 +98,7 @@ public class CartItemService {
     // Cập nhật giỏ hàng
     public CartItem update(Long id, final CreateCartItemDTO cartItemDTO) {
         CartItem cartItem = cartItemRepository.findById(id).orElse(null);
-        cartItem.setProduct(productService.get(cartItemDTO.getProductId()));
+        //cartItem.setProduct(productService.get(cartItemDTO.getProductId()));
         cartItem.setQuantity(cartItemDTO.getQuantity());
 
         return cartItemRepository.save(cartItem);

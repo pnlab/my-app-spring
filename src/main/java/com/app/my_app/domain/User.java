@@ -44,6 +44,9 @@ public class User {
     @Column
     private String address;
 
+    @Column
+    private String phone;
+
     @OneToMany(mappedBy = "user")
     private Set<CartItem> userCartItems;
 

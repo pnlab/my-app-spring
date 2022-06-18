@@ -3,11 +3,14 @@ package com.app.my_app.rest;
 import com.app.my_app.CustomUserDetails;
 import com.app.my_app.domain.User;
 import com.app.my_app.model.UserDTO;
+import com.app.my_app.service.AuthService;
 import com.app.my_app.service.CustomUserDetailsService;
 import com.app.my_app.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,9 @@ public class UserResource {
 
     private final UserService userService;
 
+    @Autowired
+    private AuthService authService;
+
     public UserResource(final UserService userService) {
         this.userService = userService;
     }
@@ -44,8 +50,8 @@ public class UserResource {
 
 
     @GetMapping("/me")
-    public ResponseEntity<CustomUserDetails> me(){
-        return ResponseEntity.ok((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    public ResponseEntity<User> me(){
+        return ResponseEntity.ok(authService.getCurrentUser());
 
     }
 

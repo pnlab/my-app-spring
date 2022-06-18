@@ -66,10 +66,12 @@ public class OrderService {
 
     @Transactional
     public Order makeOrder() {
+        // Tạo order mới
         Order order = new Order();
         order.setAddress(authService.getCurrentUser().getAddress());
-        order.setTotal(10000L);
         order.setUsers(authService.getCurrentUser());
+        Long totalPrice = 0L;
+        order.setTotal(totalPrice);
         Order updateOrder = orderRepository.save(order);
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -85,10 +87,13 @@ public class OrderService {
             o.setProduct(c.getProduct());
             OrderItem orderItemSave = orderItemRepository.save(o);
             orderItems.add(orderItemSave);
-
+            totalPrice += o.getPrice() * o.getQuantity();
         }
+        updateOrder.setTotal(totalPrice);
         Set<OrderItem> os = new HashSet<>(orderItems);
         updateOrder.setOrderItems(os);
+        // xóa
+        cartItemService.deleteAll();
 
         return orderRepository.save(updateOrder);
     }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,7 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
+
 
 
     public UserService(final UserRepository userRepository) {
@@ -44,7 +47,11 @@ public class UserService {
 
     public void update(final Long id, final UserDTO userDTO) {
         final User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        mapToEntity(userDTO, user);
+//        mapToEntity(userDTO, user);
+
+        user.setAddress(userDTO.getAddress());
+        user.setPhone(userDTO.getPhone());
+
         userRepository.save(user);
     }
 
@@ -80,6 +87,7 @@ public class UserService {
         userDTO.setFirstname(user.getFirstname());
         userDTO.setLastname(user.getLastname());
         userDTO.setAddress(user.getAddress());
+
         return userDTO;
     }
 
@@ -90,6 +98,7 @@ public class UserService {
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
         user.setAddress(userDTO.getAddress());
+        user.setPhone(userDTO.getPhone());
         return user;
     }
 

@@ -46,7 +46,7 @@ public class OrderResource {
     }
 
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public Order createOrder() {
         return orderService.makeOrder();
     }

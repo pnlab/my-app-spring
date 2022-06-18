@@ -5,22 +5,22 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-
+// data to object
 @Getter
 @Setter
 public class UserDTO {
 
     private Long id;
 
-    @NotNull
+//    @NotNull
     @Size(max = 255)
     private String username;
 
-    @NotNull
+//    @NotNull
     @Size(max = 255)
     private String email;
 
-    @NotNull
+//    @NotNull
     @Size(max = 255)
     private String password;
 
@@ -32,5 +32,8 @@ public class UserDTO {
 
     @Size(max = 255)
     private String address;
+
+    @Size(max = 255)
+    private String phone;
 
 }
